@@ -1,0 +1,66 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets:
+          - localhost:9090
+
+  - job_name: node-exporter
+    static_configs:
+      - targets:
+          - node-exporter:9100
+        labels:
+          department: docker-host
+
+  # Nodos simulados del cluster de almacenamiento (Bolivia)
+  - job_name: storage-nodes
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - 10.10.1.10:9100
+        labels:
+          node: storage-lpz-01
+          department: La Paz
+      - targets:
+          - 10.10.2.10:9100
+        labels:
+          node: storage-cbb-01
+          department: Cochabamba
+      - targets:
+          - 10.10.3.10:9100
+        labels:
+          node: storage-scz-01
+          department: Santa Cruz
+      - targets:
+          - 10.10.4.10:9100
+        labels:
+          node: storage-oru-01
+          department: Oruro
+      - targets:
+          - 10.10.5.10:9100
+        labels:
+          node: storage-pts-01
+          department: Potosí
+      - targets:
+          - 10.10.6.10:9100
+        labels:
+          node: storage-chq-01
+          department: Chuquisaca
+      - targets:
+          - 10.10.7.10:9100
+        labels:
+          node: storage-tja-01
+          department: Tarija
+      - targets:
+          - 10.10.8.10:9100
+        labels:
+          node: storage-ben-01
+          department: Beni
+      - targets:
+          - 10.10.9.10:9100
+        labels:
+          node: storage-pan-01
+          department: Pando
