@@ -4,12 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import {
   AlertTriangle,
   HardDrive,
-  Percent,
   Server,
   ServerCrash,
-  ServerOff,
 } from "lucide-react";
-import { CapacityByDepartmentChart, NodeStatusChart } from "@/components/charts/cluster-charts";
+import { CapacityByDepartmentChart } from "@/components/charts/cluster-charts";
+import { BoliviaClusterMapLoader } from "@/components/maps/bolivia-cluster-map-loader";
 import { AppShell } from "@/components/layout/app-shell";
 import { PageHeader } from "@/components/layout/page-header";
 import { StatCard, StatCardBytes } from "@/components/shared/stat-card";
@@ -25,7 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { dashboardApi } from "@/lib/api";
-import { ALERT_TYPE_LABELS, formatDate, formatPercent } from "@/lib/utils";
+import { ALERT_TYPE_LABELS, formatDate } from "@/lib/utils";
 
 export default function DashboardPage() {
   const { data, isLoading, isFetching, refetch } = useQuery({
@@ -38,11 +37,13 @@ export default function DashboardPage() {
     return (
       <AppShell>
         <PageHeader title="Dashboard" description="Resumen del cluster de almacenamiento" />
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <Skeleton key={i} className="h-32" />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-36 rounded-xl" />
           ))}
         </div>
+        <Skeleton className="mt-8 h-[580px] rounded-xl" />
+        <Skeleton className="mt-8 h-96 rounded-xl" />
       </AppShell>
     );
   }
@@ -53,20 +54,33 @@ export default function DashboardPage() {
     <AppShell>
       <PageHeader
         title="Dashboard"
-        description="Monitoreo del cluster de almacenamiento — 9 departamentos de Bolivia"
+        description="Vista ejecutiva del cluster de almacenamiento nacional"
+        badge="Tiempo real"
         onRefresh={() => refetch()}
         isRefreshing={isFetching}
       />
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <StatCardBytes title="Capacidad total" bytes={data.total_capacity_bytes} icon={HardDrive} />
-        <StatCardBytes title="Capacidad usada" bytes={data.used_capacity_bytes} icon={Server} variant="warning" />
-        <StatCardBytes title="Capacidad libre" bytes={data.free_capacity_bytes} icon={HardDrive} variant="success" />
-        <StatCard
-          title="Porcentaje de uso"
-          value={formatPercent(data.usage_percent)}
-          icon={Percent}
-          variant={data.usage_percent >= 80 ? "danger" : "default"}
+      <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+        Resumen del cluster
+      </p>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <StatCardBytes
+          title="Capacidad total cluster"
+          bytes={data.total_capacity_bytes}
+          icon={HardDrive}
+          variant="info"
+        />
+        <StatCardBytes
+          title="Capacidad usada"
+          bytes={data.used_capacity_bytes}
+          icon={Server}
+          variant="warning"
+        />
+        <StatCardBytes
+          title="Capacidad libre"
+          bytes={data.free_capacity_bytes}
+          icon={HardDrive}
+          variant="success"
         />
         <StatCard
           title="Nodos activos"
@@ -81,12 +95,6 @@ export default function DashboardPage() {
           variant={data.down_nodes > 0 ? "danger" : "default"}
         />
         <StatCard
-          title="Discos en warning"
-          value={String(data.warning_disks)}
-          icon={ServerOff}
-          variant={data.warning_disks > 0 ? "warning" : "default"}
-        />
-        <StatCard
           title="Alertas críticas"
           value={String(data.critical_alerts)}
           icon={AlertTriangle}
@@ -94,15 +102,19 @@ export default function DashboardPage() {
         />
       </div>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-2">
-        <CapacityByDepartmentChart data={data.capacity_by_department} />
-        <NodeStatusChart data={data.node_statuses} />
+      <div className="mt-8">
+        <BoliviaClusterMapLoader />
       </div>
+
+      <p className="mb-4 mt-10 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+        Capacidad regional
+      </p>
+      <CapacityByDepartmentChart data={data.capacity_by_department} />
 
       <Card className="mt-8">
         <CardHeader>
-          <CardTitle className="text-lg">Alertas recientes</CardTitle>
-          <CardDescription>Últimas alertas del cluster</CardDescription>
+          <CardTitle>Alertas recientes</CardTitle>
+          <CardDescription>Eventos que requieren atención en el cluster</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -120,14 +132,14 @@ export default function DashboardPage() {
             <TableBody>
               {data.recent_alerts.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-muted-foreground">
-                    No hay alertas recientes
+                  <TableCell colSpan={7} className="py-12 text-center text-muted-foreground">
+                    No hay alertas recientes — cluster estable
                   </TableCell>
                 </TableRow>
               ) : (
                 data.recent_alerts.map((alert) => (
                   <TableRow key={alert.id}>
-                    <TableCell className="font-medium">{alert.node_name}</TableCell>
+                    <TableCell className="font-medium text-cyan-300/90">{alert.node_name}</TableCell>
                     <TableCell>{alert.department}</TableCell>
                     <TableCell>{ALERT_TYPE_LABELS[alert.type] || alert.type}</TableCell>
                     <TableCell>
@@ -136,8 +148,12 @@ export default function DashboardPage() {
                     <TableCell>
                       <StatusBadge value={alert.status} />
                     </TableCell>
-                    <TableCell className="max-w-xs truncate">{alert.message}</TableCell>
-                    <TableCell>{formatDate(alert.triggered_at)}</TableCell>
+                    <TableCell className="max-w-xs truncate text-muted-foreground">
+                      {alert.message}
+                    </TableCell>
+                    <TableCell className="font-mono text-xs text-muted-foreground">
+                      {formatDate(alert.triggered_at)}
+                    </TableCell>
                   </TableRow>
                 ))
               )}

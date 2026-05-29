@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
-from app.routers import alerts, dashboard, nodes, sync
+from app.routers import alerts, dashboard, map, nodes, sync
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -26,6 +26,7 @@ app.add_middleware(
 )
 
 app.include_router(dashboard.router, prefix="/api")
+app.include_router(map.router, prefix="/api")
 app.include_router(nodes.router, prefix="/api")
 app.include_router(alerts.router, prefix="/api")
 app.include_router(sync.router, prefix="/api")

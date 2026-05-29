@@ -1,4 +1,5 @@
 export type NodeStatus = "UP" | "DOWN";
+export type MapNodeStatus = "UP" | "WARNING" | "CRITICAL" | "DOWN";
 export type DiskType = "HDD" | "SSD" | "NVME";
 export type HealthStatus = "HEALTHY" | "WARNING" | "CRITICAL";
 export type AlertType = "NODE_DOWN" | "DISK_USAGE" | "CPU_USAGE" | "MEMORY_USAGE";
@@ -92,6 +93,21 @@ export interface NodeStatusSummary {
   department: string;
   status: string;
   node_name: string;
+}
+
+export interface MapNode {
+  id: number;
+  department: string;
+  hostname: string;
+  ip_address: string;
+  status: MapNodeStatus;
+  latitude: number;
+  longitude: number;
+  total_capacity_tb: number;
+  used_capacity_tb: number;
+  free_capacity_tb: number;
+  disk_count: number;
+  active_alerts: number;
 }
 
 export interface DashboardSummary {

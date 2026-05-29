@@ -110,8 +110,9 @@ export default function NodesPage() {
   return (
     <AppShell>
       <PageHeader
-        title="Nodos de almacenamiento"
-        description="Gestión de nodos del cluster por departamento"
+        title="Nodos"
+        description="Infraestructura de almacenamiento por departamento — gestión completa"
+        badge="9 regiones"
         onRefresh={() => refetch()}
         isRefreshing={isFetching}
         actions={
@@ -123,9 +124,9 @@ export default function NodesPage() {
       />
 
       {isLoading ? (
-        <Skeleton className="h-96" />
+        <Skeleton className="h-96 rounded-xl" />
       ) : (
-        <div className="rounded-lg border bg-card">
+        <div className="glass-panel overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
@@ -142,10 +143,10 @@ export default function NodesPage() {
             <TableBody>
               {nodes?.map((node) => (
                 <TableRow key={node.id}>
-                  <TableCell className="font-medium">{node.name}</TableCell>
+                  <TableCell className="font-medium text-cyan-300/90">{node.name}</TableCell>
                   <TableCell>{node.department}</TableCell>
                   <TableCell>{node.hostname}</TableCell>
-                  <TableCell className="font-mono text-sm">{node.ip_address}</TableCell>
+                  <TableCell className="font-mono text-xs text-muted-foreground">{node.ip_address}</TableCell>
                   <TableCell>
                     <StatusBadge value={node.status} />
                   </TableCell>
@@ -193,7 +194,7 @@ export default function NodesPage() {
               <Label htmlFor="department">Departamento</Label>
               <select
                 id="department"
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                className="flex h-10 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm focus:border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/20"
                 value={form.department}
                 onChange={(e) => setForm({ ...form, department: e.target.value })}
               >

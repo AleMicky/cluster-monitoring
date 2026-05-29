@@ -6,6 +6,10 @@ const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "monospace"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -40,11 +44,17 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        sidebar: "hsl(var(--sidebar))",
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "mesh-gradient":
+          "radial-gradient(at 40% 20%, hsl(187 85% 53% / 0.15) 0px, transparent 50%), radial-gradient(at 80% 0%, hsl(221 83% 53% / 0.1) 0px, transparent 50%), radial-gradient(at 0% 50%, hsl(187 85% 53% / 0.08) 0px, transparent 50%)",
       },
     },
   },

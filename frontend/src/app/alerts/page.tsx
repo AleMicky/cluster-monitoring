@@ -31,8 +31,9 @@ export default function AlertsPage() {
   return (
     <AppShell>
       <PageHeader
-        title="Alertas"
-        description="Alertas activas y resueltas del cluster"
+        title="Centro de alertas"
+        description="Monitoreo proactivo de incidentes y umbrales del cluster"
+        badge="Alerting"
         onRefresh={() => refetch()}
         isRefreshing={isFetching}
         actions={
@@ -52,9 +53,9 @@ export default function AlertsPage() {
       />
 
       {isLoading ? (
-        <Skeleton className="h-96" />
+        <Skeleton className="h-96 rounded-xl" />
       ) : (
-        <div className="rounded-lg border bg-card">
+        <div className="glass-panel overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
@@ -77,7 +78,7 @@ export default function AlertsPage() {
               ) : (
                 alerts.map((alert) => (
                   <TableRow key={alert.id}>
-                    <TableCell className="font-medium">{alert.node_name}</TableCell>
+                    <TableCell className="font-medium text-cyan-300/90">{alert.node_name}</TableCell>
                     <TableCell>{alert.department}</TableCell>
                     <TableCell>{ALERT_TYPE_LABELS[alert.type] || alert.type}</TableCell>
                     <TableCell>

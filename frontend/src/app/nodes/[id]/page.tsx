@@ -105,6 +105,7 @@ export default function NodeDetailPage() {
       <PageHeader
         title={node.name}
         description={`${node.department} · ${node.hostname} · ${node.ip_address}`}
+        badge={node.department}
       />
 
       <div className="mb-6 flex items-center gap-3">
@@ -117,40 +118,43 @@ export default function NodeDetailPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Capacidad total</CardTitle>
-            <HardDrive className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">{formatBytes(node.total_capacity_bytes || 0)}</p>
-            <p className="text-xs text-muted-foreground">
-              Usado: {formatBytes(node.used_capacity_bytes || 0)} ({formatPercent(node.usage_percent || 0)})
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">CPU</CardTitle>
-            <Cpu className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">
-              {latestMetric ? formatPercent(latestMetric.cpu_usage_percent) : "—"}
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Memoria</CardTitle>
-            <MemoryStick className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold">
-              {latestMetric ? formatPercent(latestMetric.memory_usage_percent) : "—"}
-            </p>
-          </CardContent>
-        </Card>
+        {[
+          {
+            title: "Capacidad total",
+            value: formatBytes(node.total_capacity_bytes || 0),
+            sub: `Usado ${formatBytes(node.used_capacity_bytes || 0)} (${formatPercent(node.usage_percent || 0)})`,
+            icon: HardDrive,
+            color: "text-cyan-400",
+            bg: "bg-cyan-500/15",
+          },
+          {
+            title: "CPU",
+            value: latestMetric ? formatPercent(latestMetric.cpu_usage_percent) : "—",
+            icon: Cpu,
+            color: "text-violet-400",
+            bg: "bg-violet-500/15",
+          },
+          {
+            title: "Memoria",
+            value: latestMetric ? formatPercent(latestMetric.memory_usage_percent) : "—",
+            icon: MemoryStick,
+            color: "text-emerald-400",
+            bg: "bg-emerald-500/15",
+          },
+        ].map((item) => (
+          <Card key={item.title} className="glass-panel-hover">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">{item.title}</CardTitle>
+              <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${item.bg}`}>
+                <item.icon className={`h-4 w-4 ${item.color}`} />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <p className="font-mono text-2xl font-bold">{item.value}</p>
+              {item.sub && <p className="mt-1 text-xs text-muted-foreground">{item.sub}</p>}
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">

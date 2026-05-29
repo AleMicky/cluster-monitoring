@@ -35,20 +35,21 @@ export default function SettingsPage() {
     <AppShell>
       <PageHeader
         title="Configuración"
-        description="Operaciones del cluster y datos de ejemplo"
+        description="Operaciones del cluster, integraciones y datos de demostración"
+        badge="Admin"
       />
 
       {message && (
-        <div className="mb-6 rounded-md border border-green-200 bg-green-50 p-4 text-sm text-green-800">
+        <div className="mb-6 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-400">
           {message}
         </div>
       )}
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card>
+        <Card className="glass-panel-hover">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
-              <RefreshCw className="h-5 w-5" />
+              <RefreshCw className="h-5 w-5 text-cyan-400" />
               Sincronizar Prometheus
             </CardTitle>
             <CardDescription>
@@ -65,10 +66,10 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="glass-panel-hover">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
-              <Sprout className="h-5 w-5" />
+              <Sprout className="h-5 w-5 text-emerald-400" />
               Seed departamentos
             </CardTitle>
             <CardDescription>

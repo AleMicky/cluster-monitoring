@@ -1,5 +1,6 @@
 from app.schemas.alert import AlertListResponse, AlertResponse
 from app.schemas.dashboard import DashboardSummary, DepartmentCapacity, NodeStatusSummary
+from app.schemas.map import MapNodeResponse
 from app.schemas.metric_snapshot import MetricSnapshotResponse
 from app.schemas.storage_disk import StorageDiskResponse
 from app.schemas.storage_node import (
@@ -21,4 +22,5 @@ __all__ = [
     "DashboardSummary",
     "DepartmentCapacity",
     "NodeStatusSummary",
+    "MapNodeResponse",
 ]
